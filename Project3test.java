@@ -1,6 +1,3 @@
-//Adding some text here to test git repository status.
-
-
 /*
 Eric Y. U Huang
 CISC 3320 - MW3
