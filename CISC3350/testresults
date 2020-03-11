@@ -1,0 +1,104 @@
+Below are some test cases with different outputs for different number of arguments.
+A file called testfile is used in some of the tests. Any outputs to a file is placed
+in a file called results. If no output file path is given then all lines are printed
+to stdout/console
+
+testfile file contents
+
+hello
+goodbye
+GOODBYE
+goodbye
+hello
+hello
+pasta
+cake
+
+*****test 1*****
+./hw1 < testfile > results
+
+hello
+goodbye
+GOODBYE
+goodbye
+hello
+pasta
+cake
+
+*****test 2*****
+
+./hw1 -i < testfile > results
+
+Result file content
+hello
+goodbye
+hello
+pasta
+cake
+
+*****test 3*****
+
+root@debian-VM:/home/eric/Documents# ./hw1 < testfile
+hello
+goodbye
+GOODBYE
+goodbye
+hello
+pasta
+cake
+
+root@debian-VM:/home/eric/Documents# 
+
+*****test 4*****
+
+root@debian-VM:/home/eric/Documents# ./hw1 -i <testfile
+hello
+goodbye
+hello
+pasta
+cake
+
+root@debian-VM:/home/eric/Documents# 
+
+*****test 5*****
+
+root@debian-VM:/home/eric/Documents# ./hw1 testfile results
+
+Result file content
+hello
+goodbye
+GOODBYE
+goodbye
+hello
+pasta
+cake
+
+*****test 6*****
+
+root@debian-VM:/home/eric/Documents# ./hw1 -i testfile results
+
+Result file content
+hello
+goodbye
+hello
+pasta
+cake
+
+*****test 7*****
+
+root@debian-VM:/home/eric/Documents# ./hw1 -i testfile results extraArgument
+Too many command line arguments 
+root@debian-VM:/home/eric/Documents# 
+
+*****test 8*****
+
+root@debian-VM:/home/eric/Documents# ./hw1 nonexistfile
+Unable to open input file 
+Error: No such file or directory
+root@debian-VM:/home/eric/Documents# 
+
+*****test 9*****
+
+root@debian-VM:/home/eric/Documents# ./hw1 -k testfile results
+Invalid optionroot@debian-VM:/home/eric/Documents# 
+
