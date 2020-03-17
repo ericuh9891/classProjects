@@ -2,28 +2,26 @@
 
 #include <string.h>
 #include <stdio.h>
+#include <unistd.h>
+#include <stdlib.h>
 
 int main(){
-	char str[80] = "./testsim 1 7";
-	const char s[2] = " ";
-	char *token;
-	char *program_name;
-	char *arg1;
-	char *arg2;
+	char str[13] = "./testsim 3 2";
 
-	program_name = strtok(str," ");
-	arg1 = strtok(NULL," ");
-	arg2 = strtok(NULL," ");
-	printf("%s\n",program_name);
-	printf("%s\n",arg1);
-	printf("%s\n",arg2);
-/*
-	token = strtok(str,s);
+//	FILE *input = fdopen(0,"r");
+//	fgets(str,300000,input);
+	char *arg0 = strtok(str," ");
+	char *arg1 = strtok(NULL," ");
+	char *arg2 = strtok(NULL," ");
+	char *argv_list[] = {arg0,arg1,arg2,NULL};
+	if(execv(arg0,argv_list) == -1)
+		perror("execv failed");
 
-	while (token != NULL){
-		printf(" %s\n", token);
-		token = strtok(NULL,s);
-	}
-*/
+//	int arg2_int = atoi(arg2);
+//	printf("%s %s %s\n",arg0,arg1,arg2);
+//	printf("size of arg2 = %d\n",sizeof arg2_int);
+
+//	execl(arg0,arg1,arg2,(char *)0);
+	
 	return 0;
 }

@@ -1,0 +1,68 @@
+Version 1 code
+/*
+//Setup for executing multiple processes
+	pr_limit = atoi(argv[1]);
+	printf("pr_limit set to: %d\n",pr_limit);
+
+	int pr_count = 0;
+	FILE *input = fdopen(0,"r");
+	pid_t pid;
+	int wait_status;
+	int exec_status;
+
+	while(fgets(buf, line_size, input) != NULL){
+		if(pr_limit != pr_count){
+			pr_count++;
+			pid = fork();
+		}
+		
+//Child execution
+		if(pid == 0){
+			printf("Child process = %jd Parent process is = %jd\n", getpid(), getppid());
+/*
+			program_name = strtok(buf," ");
+			arg1 = strtok(NULL," ");
+			arg2 = strtok(NULL," ");
+*/
+			exec_status = execl(strtok(buf," "),strtok(NULL," "),strtok(NULL," "),"NULL");
+//Parent execution
+			if(exec_status == -1){
+				perror("execl failed");
+				exit(EXIT_FAILURE);
+			}
+		}
+
+
+
+
+
+
+
+//Parent execution
+/*
+		while(pr_limit != pr_count){
+			
+
+
+		}
+*/
+
+
+/*
+		if(pid > 0){
+			if(pr_limit != pr_count){
+				waitpid(pid,&wait_status,WNOHANG);
+				pr_count--;
+			}
+			else{
+				wait(&wait_status);
+				pr_count--;
+			}
+		}
+*/
+//		printf("%s%c",buf,'\0');
+	}
+*/
+	return 0;
+}
+

@@ -10,49 +10,54 @@
 int main(int argc, char **argv){
 //Argument checking
 	int pr_limit;
-	int pr_count = 0;
-	char buf[line_size];
+	
 
 	if(argc != 2){
 		printf("invalid number of arguments\n");
 		exit(EXIT_FAILURE);
 	}
-	if(pr_limit = atoi(argv[1]) <= 0){
+	if(atoi(argv[1]) <= 0 || atoi(argv[1]) >= 30000){
 		printf("invalid argument for number of processes\n");
 		exit(EXIT_FAILURE);
 	}
+//Version 2
 //Setup for executing multiple processes
-	FILE *input = fdopen(0,"r");
+	char buf[line_size];
 	pid_t pid;
-	char *program_name;
+	int execv_status;
+	int pr_count;
+	char *arg0;
 	char *arg1;
 	char *arg2;
-	int status;
-	while(fgets(buf, line_size, input) != NULL){
-		pid = fork();
-//Child execution
-		if(pid == 0){
-			program_name = strtok(buf," ");
-			arg1 = strtok(NULL," ");
-			arg2 = strtok(NULL," ");
-			execl(program_name,arg1,arg2,"NULL");
-			printf("executing program: %s ",buf);
+	
+
+	FILE *input = fdopen(0,"r");
+		if(input == NULL)
+			perror("Error get FILE stream from stdin");
+	
+	do{
+		fgets(buf,line_size,input);
+		if(buf != NULL && pr_limit != pr_count){
+			pid = fork();
 			pr_count++;
-		}
-//Parent execution
-		if(pid > 0){
-			if(pr_limit != pr_count){
-				waitpid(pid,&status,WNOHANG);
-				pr_count--;
+			if(pid == -1){
+				perror("Fork failed");
 			}
-			else{
-				wait(&status);
-				pr_count--;
+//Child Process
+			if(pid == 0){
+				arg0 = strtok(buf," ");
+				arg1 = strtok(NULL," ");
+				arg2 = strtok(NULL," ");
+				char *argv_list[] = {arg0,arg1,arg2,NULL};
+				printf("Starting child process: %jd, running %s\n",getpid(),buf);
+				execv_status = execv(arg0,argv_list);
+				if(execv_status == -1){
+					perror("Exec failed");
+				}
 			}
 		}
-//		printf("%s%c",buf,'\0');
-	}
-	exit(EXIT_SUCCESS);
+	}while(buf != NULL && pr_count != 0);
+
 	return 0;
 }
 
