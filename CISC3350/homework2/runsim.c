@@ -93,7 +93,7 @@ int main(int argc, char **argv){
 				}
 			}
 		}
-	}while(buf != NULL && pr_count != 0);
+	}while(fgets_status != NULL || pr_count != 0);
 	return 0;
 }
 
