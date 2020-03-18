@@ -1,6 +1,6 @@
 TODO list:
-1. Add proper error checking for system calls
-2. Remove unneeded code
-3. Restructure code flow
-4. Add summary to source code
-5. Add comments
+1. (done)Add proper error checking for system calls
+2. (done)Remove unneeded code
+3. (done)Restructure code flow
+4. (done)Add summary to source code
+5. (done)Add comments
