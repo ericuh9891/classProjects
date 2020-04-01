@@ -8,7 +8,7 @@ using namespace std;
 
 class Rational{
 	public:
-		Rational() : num{0}, denom{0}{};
+		Rational() : num{0}, denom{1}{};
 		Rational(int numer) : num{numer}, denom{1}{};
 		Rational(int numer, int denom);
 		Rational(const Rational &r){
@@ -30,6 +30,7 @@ class Rational{
 		bool equals(const Rational &r)const;
 		int compareTo(const Rational &r)const;
 		void print(ostream &os) const;
+		int gcd(int num1, int num2);
 	private:
 		int num;
 		int denom;
