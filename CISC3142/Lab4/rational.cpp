@@ -2,6 +2,7 @@
 #include <iostream>
 #include "rational.h"
 #include <stdlib.h>
+#include "rational_exception.h"
 
 using namespace std;
 
@@ -15,9 +16,13 @@ int Rational::gcd(int num1, int num2){
 }
 
 Rational::Rational(int numer, int denom){
-	int gcd = Rational::gcd(numer,denom);	
-	this->num = numer/gcd;
-	this->denom = denom/gcd;
+	if(denom == 0)
+		throw RationalException("Denominator cannot be zero");
+	else{
+		int gcd = Rational::gcd(numer,denom);	
+		this->num = numer/gcd;
+		this->denom = denom/gcd;
+	}
 }
 int Rational::getNumerator()const{
 	return num;
@@ -25,11 +30,9 @@ int Rational::getNumerator()const{
 int Rational::getDenominator()const{
 	return denom;
 }
-//return with rational constructor
 Rational Rational::neg()const{
 	return Rational(this->getNumerator() * -1,this->getDenominator());
 }
-//return with rational constructor
 Rational Rational::inv()const{
 	return Rational(this->getDenominator(), this->getNumerator());
 }
@@ -74,20 +77,10 @@ int Rational::compareTo(const Rational &r)const{
 		return 0;
 }
 void Rational::print(ostream &os)const{
-
-}
-int main(){
-	int n,d;
-	cin >> n >> d;
-	Rational r1(n,d);
-	cin >> n >> d;
-	Rational r2(n,d);
-	cout << "Value of r1: " << r1.getNumerator() << "/" << r1.getDenominator() << endl;
-	cout << "Value of r2: " << r2.getNumerator() << "/" << r2.getDenominator() << endl;
-	int results = r1.compareTo(r2);
-	cout << "After function call in place r1 and r2: " << endl;
-	cout << "Value of r1: " << r1.getNumerator() << "/" << r1.getDenominator() << endl;
-	cout << "Value of r2: " << r2.getNumerator() << "/" << r2.getDenominator() << endl;
-	cout << "Value of results: " << results << endl;
-	return 0;
+	if(num == 0)
+		os << 0;
+	else if (denom == 1)
+		os << num;
+	else
+		os << this->getNumerator() << "/" << this->getDenominator();
 }

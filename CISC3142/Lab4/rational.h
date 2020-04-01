@@ -37,12 +37,4 @@ class Rational{
 };
 
 inline ostream &operator <<(ostream &os, const Rational &r) {r.print(os);}
-
 #endif
-class RationalException{
-	public:
-		RationalException(string what) : what(what){}
-		string getWhat(){return what;}
-	private:
-		string what;
-};
