@@ -3,9 +3,10 @@
 #include "rational.h"
 #include <stdlib.h>
 #include "rational_exception.h"
+#include "gcd.h"
 
 using namespace std;
-
+/*
 int Rational::gcd(int num1, int num2){
 	num1 = abs(num1);
 	num2 = abs(num2);
@@ -14,12 +15,12 @@ int Rational::gcd(int num1, int num2){
 	else
 		return gcd(num2, num1%num2);
 }
-
+*/
 Rational::Rational(int numer, int denom){
 	if(denom == 0)
 		throw RationalException("Denominator cannot be zero");
 	else{
-		int gcd = Rational::gcd(numer,denom);	
+		int gcd = gcd(numer,denom);	
 		this->num = numer/gcd;
 		this->denom = denom/gcd;
 	}
