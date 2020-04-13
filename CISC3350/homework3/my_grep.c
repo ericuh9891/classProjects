@@ -25,7 +25,7 @@ to a file name.
 #include <unistd.h> // for sleep function
 
 #define line_size 10000
-#define checkpoint 0
+#define checkpoint 1
 
 // Global variable of lines scanned and string pattern
 int lines_read = 0;
@@ -38,11 +38,13 @@ void* parse_file(void *arg){
 	if(checkpoint)
 		printf("start of thread\n");
 	char* filename = arg;
-	printf("filename: %s\n",filename);
+	if(checkpoint)
+		printf("filename: %s\n",filename);
 	char line[line_size];
 	char* get_line_status = "";
 	FILE* input = fopen(filename,"r");
-	int lines_matched = 0;
+	int* lines_matched = (int*)malloc(sizeof(int));
+	lines_matched = 0;
 	int file_lines_read = 0;
 	get_line_status = fgets(line,line_size,input);
 	while(get_line_status != NULL){	
@@ -59,7 +61,7 @@ void* parse_file(void *arg){
 	pthread_mutex_lock(&lines_read_lock);
 	lines_read += file_lines_read;
 	pthread_mutex_unlock(&lines_read_lock);
-	printf("--%s has %d matched lines\n",filename, lines_matched);
+	printf("--%s has %d matched lines\n",filename, *lines_matched);
 	if(checkpoint)
 		printf("thread finish\n");
 	pthread_exit(lines_matched);
@@ -92,16 +94,17 @@ int main(int argc, char* argv[]){
 			strerror(create_thread_status);
 		}
 	}
-	int retval = 0;
+	int* retval;
 	int thread_join_status;
 	for(int i = 0; i < num_files; i++){
 		if(checkpoint)
 			printf("checkpoint: before joining thread %d\n", i);		
-		thread_join_status = pthread_join(ids[i], &retval);
+		thread_join_status = pthread_join(ids[i], (void**)retval);
 		if(thread_join_status){
 			printf("pthread_join error: %d\n", thread_join_status);
 			strerror(thread_join_status);
 		}
+		printf("[main] Thread #%d returned with value: %d\n", i, *(int*)retval); 
 	}
 	printf("Total lines read: %d\n",lines_read);
 	return 0;
