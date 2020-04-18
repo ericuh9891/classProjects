@@ -1,24 +1,29 @@
-/******
-TODO: 
--(DONE)Parsing arguments
--(DONE)setting up threads
--(DONE)thread logic 
--(DONE)synchronization on lines_read data access
--(DONE)joining threads
--(DONE)appropriate stdout messages according to homework specification
--(DONE)add error checking
--restructure code
--final test to ensure code works
--comments
--summary comment
+/*****************************
+Eric Y. U Huang
+CISC 3350 - TR3 Spring 2020
+Professor Y. Xiang
+Homework 3
 
-LEFTOFF:
-4/11/2020
-(SOLVED)Getting segmentation faults I believe in either the parse_line function that the threads are running on
-or something to do with the pthread_join calls.(SOLUTION)I was passing pointers to memory address instead of passing
-pointers to a variable. It caused the function fopen to try to open a file with a memory address instead of a char* 
-to a file name.
-******/
+This program is compiled with the 'gcc -Wall -pthread -o my_grep my_grep.c' using gcc version (Debian 8.3.0-6) 8.3.0
+This program emulates the basic feature of linux grep command by searching lines in one or more files that contains
+the user inputted pattern. The program parses the command line arguments by:
+./my_grep [Pattern] [FileName1] [FileName2] ... [FileNameN]
+with Pattern being the string being searched for inside the files FileNameN. The program first parses the command 
+line arguments. If the number of command line arguments is less than 3, the program will terminate after stating
+not enough arguments. If proper number of arguments are given, the program will store the Pattern given by user
+as a global variable. The total number of lines_read from all files and a mutex lock, lines_read_lock, for
+accessing the variable are also stored as global variables. Program then creates a thread per each file given by user
+and passes the FileName to the threads. Each threads will attempt to open a file based on the passed in FileName.
+The threads will than read a line and search for the Pattern in each line. Every line read in will increment the
+local variable, file_lines_read. The threads will print out the line if the Pattern is found in the line and
+increment a counter for lines_matched. After all the lines are read in a file, the thread will add the total
+number of file_lines_read to the global variable lines_read by obtaining the mutex lock, lines_read_lock, and
+releasing it when it's done adding to it. The thread then returns to the main thread/process the number of
+lines_matched when it exits. Meanwhile the main thread/process waits for all the threads to finish by calling
+pthread_join in a for loop. It adds the thread return value to lines_matched and prints the return value of each
+pthread_join which is the lines_matched. After all the threads are finished, the main thread/process prints out
+the number of lines_matched and total number of lines read from global variable lines_read.
+*****************************/
 
 #include <stdio.h>
 #include <pthread.h>
@@ -26,9 +31,8 @@ to a file name.
 #include <string.h>
 
 #define line_size 10000
-#define checkpoint 0
 
-// Global variable of lines scanned and string pattern
+// Global variable of total lines scanned and string pattern
 int lines_read = 0;
 char* pattern;
 // Global lock for use by threads to accress lines_read
@@ -36,16 +40,15 @@ pthread_mutex_t lines_read_lock = PTHREAD_MUTEX_INITIALIZER;
 
 // Threat function
 void* parse_file(void *arg){
-
-	if(checkpoint)
-		printf("Checkpoint: start of thread\n");
 	char* filename = arg;
-
-	if(checkpoint)
-		printf("Checkpoint: filename: %s\n",filename);
+/* 
+Since I need the return value to exist after the function returns,
+I allocate memory in the free store to store the number of lines_matched.
+*/
 	int* lines_matched = (int*)malloc(sizeof(int*));
 	*lines_matched = (int)malloc(sizeof(int));
 	*lines_matched = 0;
+// Opens file stream
 	FILE* input = fopen(filename,"r");
 	if(input == NULL){
 		perror("Unable to open file");
@@ -54,6 +57,7 @@ void* parse_file(void *arg){
 	char line[line_size];
 	int file_lines_read = 0;
 	char* get_line_status = "";
+// Reads and searches for the Pattern
 	get_line_status = fgets(line,line_size,input);
 	while(get_line_status != NULL){
 			file_lines_read++;
@@ -63,47 +67,29 @@ void* parse_file(void *arg){
 		}
 		get_line_status = fgets(line,line_size,input);
 	}
+// Obtains lock and increments global variable
 	pthread_mutex_lock(&lines_read_lock);
 	lines_read += file_lines_read;
 	pthread_mutex_unlock(&lines_read_lock);
+// Releases lock
 	printf("--%s has %d matched lines\n",filename, *lines_matched);
-
-	if(checkpoint)
-		printf("Checkpoint: thread finish\n");
-
 	pthread_exit(lines_matched);
 }
 
 int main(int argc, char* argv[]){
-/* Argument checking */
+// Argument checking
 	if(argc < 3){
 		printf("invalid number of arguments\n");
 		printf("usage: [Pattern] [FileName1] [FileName2] ... [FileNameN]\n"); 
 		exit(EXIT_FAILURE);
 	}
-/* Argument parsing */
-
-	if(checkpoint)
-		printf("Checkpoint: Before argument parsing\n");
-
+// Argument parsing
 	pattern = argv[1];
-
-	if(checkpoint)
-		printf("Checkpoint: pattern stored: '%s'\n", pattern);
-
 	int num_files = argc - 2;
-
-	if(checkpoint)
-		printf("Checkpoint: num of files passed in: %d\n", num_files);
-
 	pthread_t ids[num_files];
 	int create_thread_status = 0;
-/* Thread creation */
+// Thread creation
 	for(int i = 0; i < num_files; i++){
-
-		if(checkpoint)
-			printf("Checkpoint: Before creating thread#%d: passing in file: %s\n", i+1, argv[i+2]);
-
 		pthread_create(&ids[i],NULL,parse_file,argv[i+2]);
 		if(create_thread_status)
 			perror("pthread_create: error\n");
@@ -111,11 +97,8 @@ int main(int argc, char* argv[]){
 	int* retval;
 	int thread_join_status;
 	int lines_matched = 0;
+// Waits on all the threads
 	for(int i = 0; i < num_files; i++){
-
-		if(checkpoint)
-			printf("Checkpoint: before joining thread %d\n", i);		
-
 		thread_join_status = pthread_join(ids[i], &retval);
 		if(thread_join_status){
 			perror("pthread_join: error\n");
