@@ -1,27 +1,21 @@
 class Course{
 	public:
 		Course(int id,int credits, char grade){
-			course_id = id;
-			course_credits = credits;
-			course_grade = grade;
+			this->id = id;
+			this->credits = credits;
+			this->grade = grade;
 		}
 		int get_id(){
-			return course_id;
+			return id;
 		}
-		int get_course_credits(){
-			return course_credits;
+		int get_credits(){
+			return credits;
 		}
 		char get_grade(){
-			return course_grade;
-		}
-		void set_id(int  id){
-			this->course_id = id;
-		}
-		void set_grade(char grade){
-			this->course_grade = grade;
+			return grade;
 		}
 	private:
-		int course_id;
-		int course_credits;
-		char course_grade;
+		int id;
+		int credits;
+		char grade;
 };
