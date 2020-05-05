@@ -1,16 +1,19 @@
+#include <iostream>
 #include "student.h"
+#ifndef STUDENT_CPP
+#define STUDENT_CPP
 
-Student::Student(int id, string name){
+Student::Student(int id, std::string name){
 	this->id = id;
 	this->name = name;
 }
 int Student::get_id(){
 	return id;
 }
-string Student::get_name(){
+std::string Student::get_name(){
 	return name;
 }
-vector<Course>& Student::access_all_courses(){
+std::vector<Course>& Student::access_all_courses(){
 	return courses_taken;
 }
 void Student::add_course(Course course){
@@ -45,3 +48,11 @@ double Student::get_GPA(){
 	calc_GPA();
 	return GPA;
 }
+void Student::print(std::ostream &os){
+	os << id << " " << name << ": " << get_GPA() << std::endl;
+	for(auto i : courses_taken){
+		os << "   " << i << std::endl;
+	}
+}
+
+#endif

@@ -1,7 +1,7 @@
 #include <iostream>
-#include "student.cpp"
 #include <fstream>
 #include <algorithm>
+#include "student.cpp"
 
 using namespace std;
 
@@ -18,7 +18,7 @@ int main(int argc, char*argv[]){
 	int course_credits;
 	char course_grade;
 
-	ifstream input("student.dat");
+	ifstream input("students.data");
 		if(input.fail()){
 			cerr << "Could not open file" << endl;
 			return -1;
@@ -40,13 +40,9 @@ int main(int argc, char*argv[]){
 
 	sort(students.begin(),students.end(),compare);
 
-	for(int i = 0; i < students.size(); ++i){
-		cout << students[i].get_id() << " " << students[i].get_name() << ": " << students[i].get_GPA() <<  endl;
-		vector<Course> courses = students[i].access_all_courses();
-		for(int j = 0; j < courses.size(); ++j){
-			cout << "	" << courses[j].get_id() << " (" << courses[j].get_credits() << " credits): " << courses[j].get_grade() << endl;
-		}
-	}
+	for(auto i:students)
+		cout << i;
+
 	cout << endl << students.size() << " records processed" << endl;
 	return 0;
 }
