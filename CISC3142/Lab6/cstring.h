@@ -5,6 +5,5 @@ namespace mystring{
 	char *strchr(char *str, int c);
 	char *strrchr(char *str, int c);
 	int strlen(const char *str);
-#include "cstring.cpp"
 }
-
+#include "cstring.cpp"
