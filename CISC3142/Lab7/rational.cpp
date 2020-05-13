@@ -14,18 +14,6 @@ Rational::Rational(int num, int denom){
 	}
 }
 
-int Rational::getNumerator() const{
-	return num;
-}
-
-int Rational::getDenominator() const{
-	return denom;
-}
-
-Rational Rational::inv() const{
-	return Rational(denom,num);
-}
-
 Rational &Rational::operator+=(const Rational &r){
 	num = num * r.getDenominator();
 	int temp = r.getNumerator() * denom;
@@ -71,6 +59,10 @@ Rational Rational::operator-() const{
 	return Rational(-num,denom);
 }
 
+Rational Rational::inv() const{
+	return Rational(denom,num);
+}
+
 int Rational::compareTo(const Rational &r) const{
 	int callerNumer = this->getNumerator() * r.getDenominator();
 	int argNumer = this->getDenominator() * r.getNumerator();
@@ -82,14 +74,31 @@ int Rational::compareTo(const Rational &r) const{
 		return 0;
 }
 
+int Rational::getNumerator() const{
+	return num;
+}
+
+int Rational::getDenominator() const{
+	return denom;
+}
+
+void Rational::print(std::ostream &os) const{
+	if(num == 0)
+		os << 0;
+	else if(denom == 1)
+		os << num;
+	else
+		os << num << "/" << denom;
+}
+
 Rational operator+(const Rational &r1, const Rational &r2){
 	return Rational(r1.getNumerator() * r2.getDenominator() + r2.getNumerator() * r1.getDenominator(),
-		r1.getDenominator() * r2.getNumerator());
+		r1.getDenominator() * r2.getDenominator());
 }
 
 Rational operator-(const Rational &r1, const Rational &r2){
 	return Rational(r1.getNumerator() * r2.getDenominator() - r2.getNumerator() * r1.getDenominator(),
-		r1.getDenominator() * r2.getNumerator());
+		r1.getDenominator() * r2.getDenominator());
 }
 
 Rational operator*(const Rational &r1, const Rational &r2){
@@ -105,15 +114,6 @@ bool operator==(const Rational &r1, const Rational &r2){
 		return true;
 	else
 		return false;
-}
-
-void Rational::print(std::ostream &os) const{
-	if(num == 0)
-		os << 0;
-	else if(denom == 1)
-		os << num;
-	else
-		os << num << "/" << denom;
 }
 
 std::ostream &operator<<(std::ostream &os, const Rational &r){
