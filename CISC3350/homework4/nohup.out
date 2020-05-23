@@ -1,0 +1,20 @@
+		exit(EXIT_FAILURE);
+			exit(EXIT_FAILURE);
+			exit(EXIT_FAILURE);
+			exit(EXIT_FAILURE);
+			exit(EXIT_FAILURE);
+			exit(EXIT_FAILURE);
+		exit(EXIT_FAILURE);
+		exit(EXIT_FAILURE);
+			exit(EXIT_FAILURE);
+		perror("No command was supplied to my_nohup");
+			perror("Could not open special device file null");
+			perror("Unable to redirect STDIN to /dev/null");
+			perror("Could not open or create file 'nohup.out'");
+			perror("Unable to redirect STDOUT to 'nohup.out'");
+			perror("Unable to redirect STDERR to 'nohup.out'");
+		perror("Unable to modify signal handler");
+		perror("Unable to modify signal handler");
+			perror("Unable to exec program");
+--Ready to sleep 2 s for 2 time(s)
+--I have slept 2 s for 2 time(s)
