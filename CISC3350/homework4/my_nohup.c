@@ -11,7 +11,7 @@ If a command or program is supplied, STDIN is redirected to /dev/null. STDOUT AN
 to a file called nohup.out. If nohup.out doesn't exist then it is created in the current directory.
 If any redirection fails then program exits. Signals SIGHUP and SIGQUIT are set to be ignored so
 the supplied command or program will run without being linked to a terminal. If signals fail to
-be set to ignore then program exits. Otherwise execl() is called to run the command or program.
+be set to ignore then program exits. Otherwise execv() is called to run the command or program.
 ******************************/
 
 #include <stdio.h>
