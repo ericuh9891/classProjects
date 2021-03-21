@@ -18,3 +18,5 @@
 			perror("Unable to exec program");
 --Ready to sleep 2 s for 2 time(s)
 --I have slept 2 s for 2 time(s)
+--Ready to sleep 5 s for 10 time(s)
+--I have slept 5 s for 10 time(s)
